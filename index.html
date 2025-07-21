@@ -502,25 +502,48 @@ function applyLanguage(lang) {
   }
 
   function suggestCareers() {
-    let suggestion = `Based on your interests and marks, you can consider:<br/><ul>`;
-    if (userData.favSubjects.includes('Math') || userData.skills.includes('Coding')) {
-      suggestion += '<li><b>B.Tech in Computer Science</b> → Software Engineer, Ethical Hacker</li>';
-    }
-    if (userData.favSubjects.includes('Science')) {
-      suggestion += '<li><b>MBBS or BDS</b> → Doctor, Dentist</li>';
-    }
-    if (userData.skills.includes('Business')) {
-      suggestion += '<li><b>BBA or B.Com</b> → Entrepreneur, Manager</li>';
-    }
-    if (userData.skills.includes('Design')) {
-      suggestion += '<li><b>Design/Multimedia</b> → UI/UX Designer, Animator</li>';
-    }
-    suggestion += '</ul>';
-    if (userData.grade === '12') {
-      suggestion += `<br/><b>Suggested UAE Colleges:</b> AUS, Khalifa University, Heriot-Watt Dubai`;
-    }
-    document.getElementById('career-suggestion').innerHTML = suggestion;
+  let suggestion = `Based on your interests and marks, you can consider:<br/><ul>`;
+
+  if (userData.favSubjects.includes('Math') || userData.skills.includes('Coding')) {
+    suggestion += '<li><b>B.Tech in Computer Science</b> → Software Engineer, Ethical Hacker</li>';
+    suggestion += '<li><b>B.Sc. in Data Science / AI</b> → Data Analyst, AI Engineer, ML Specialist</li>';
+    suggestion += '<li><b>B.Tech Civil/Mechanical/ECE</b> → Civil Engineer, Mechanical Engineer, Electronics Engineer</li>';
   }
+
+  if (userData.favSubjects.includes('Science')) {
+    suggestion += '<li><b>MBBS or BDS</b> → Doctor, Dentist</li>';
+    suggestion += '<li><b>B.Pharm / B.Sc. Biotech</b> → Pharmacist, Biotech Researcher, Lab Technician</li>';
+  }
+
+  if (userData.skills.includes('Business')) {
+    suggestion += '<li><b>BBA or B.Com</b> → Entrepreneur, Manager</li>';
+  }
+
+  if (userData.skills.includes('Design')) {
+    suggestion += '<li><b>Design / Multimedia</b> → UI/UX Designer, Animator</li>';
+    suggestion += '<li><b>B.Arch</b> → Architect</li>';
+  }
+
+  if (userData.skills.includes('Helping') || userData.activities.includes('Helping others')) {
+    suggestion += '<li><b>B.Ed / B.Sc. / B.A.</b> → School Teacher, Tutor, Education Consultant</li>';
+  }
+
+  if (userData.activities.includes('Making videos') || userData.skills.includes('Reading')) {
+    suggestion += '<li><b>Mass Communication / Journalism</b> → Journalist, Content Creator, TV Host</li>';
+  }
+
+  if (userData.skills.includes('Reading') || userData.activities.includes('Solving puzzles')) {
+    suggestion += '<li><b>BA LLB (Law)</b> → Lawyer, Judge, Legal Advisor</li>';
+  }
+
+  suggestion += '</ul>';
+
+  if (userData.grade === '12') {
+    suggestion += `<br/><b>Suggested UAE Colleges:</b> AUS, Khalifa University, Heriot-Watt Dubai`;
+  }
+
+  document.getElementById('career-suggestion').innerHTML = suggestion;
+}
 
 async function downloadResult(type) {
   const resultDiv = document.getElementById('screen-results');
@@ -534,7 +557,6 @@ async function downloadResult(type) {
   const name = userData.name || 'Student';
   const grade = userData.grade || 'Grade';
   
-  // Get current date and time
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
   const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
@@ -557,7 +579,6 @@ async function downloadResult(type) {
   }
 }
 
-  // Keyboard navigation
   document.addEventListener("keydown", function(e) {
     const key = e.key;
     if (key === "ArrowDown") {
@@ -577,5 +598,114 @@ async function downloadResult(type) {
     }
   });
 </script>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    color: #eee;
+  }
+
+  .banner {
+    background: #1f1f1f;
+    text-align: center;
+    padding: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #00ffe1;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #1e1e1e;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px #000;
+    box-sizing: border-box;
+  }
+
+  .question {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin: 0.5rem 0 1.5rem;
+    border-radius: 8px;
+    border: none;
+    background: #2c2c2c;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  button {
+    background: #00ffe1;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    box-sizing: border-box;
+  }
+
+  .checkbox-group label {
+    display: block;
+    margin: 0.3rem 0;
+    cursor: pointer;
+  }
+
+  canvas {
+    margin: 2rem auto;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px;
+    display: block;
+  }
+
+  .screen {
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 4rem;
+  }
+  @media (max-width: 600px) {
+    .banner {
+      font-size: 1.3rem;
+      padding: 1rem;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    .question {
+      font-size: 1rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    button {
+      font-size: 0.95rem;
+    }
+  }
+</style>
 </body>
 </html>
