@@ -14,70 +14,66 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Comic Neue', cursive;
       background-color: #121212;
-      color: #eee;
-    }
-    .banner {
-      background: #1f1f1f;
-      text-align: center;
-      padding: 1.5rem;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
-      color: #00ffe1;
+      color: #000000;
     }
     .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: #1e1e1e;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px #000;
+      background-color: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #000000;
     }
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-    }
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 0.7rem;
-      margin: 0.5rem 0 1.5rem;
-      border-radius: 8px;
-      border: none;
-      background: #2c2c2c;
-      color: #fff;
-    }
+    input,
+    select,
+    textarea,
     button {
-      background: #00ffe1;
+      background-color: #2a2a2a;
+      color: #000000;
       border: none;
-      padding: 0.8rem 1.5rem;
       border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
+      padding: 0.75rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    input:hover,
+    select:hover,
+    textarea:hover,
+    button:hover {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #00c9ff;
+      background-color: #333333;
+      color: #ffffff;
     }
     .checkbox-group label {
       display: block;
-      margin: 0.3rem 0;
+      margin: 0.4rem 0;
       cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      padding: 6px 8px;
+      border-radius: 6px;
+      color: #000000;
     }
-    canvas {
-      margin: 2rem auto;
-      max-width: 100%;
-      width: 100% !important;
-      height: 500px !important;
+    .checkbox-group label:hover {
+      background-color: #2d2d2d;
+      color: #ffffff;
     }
-    .screen {
-      display: none;
+    .question {
+      font-weight: bold;
+      margin-bottom: 1rem;
     }
-    .screen.active {
-      display: block;
-    }
-    .footer {
+    .banner {
       text-align: center;
+      background-color: #1f1f1f;
+      color: #00c9ff;
+      font-size: 2rem;
       padding: 1rem;
-      font-size: 0.9rem;
-      color: #888;
-      margin-top: 4rem;
     }
   </style>
 </head>
