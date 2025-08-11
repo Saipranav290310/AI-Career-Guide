@@ -4,368 +4,724 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AI Career Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <audio id="sound1" src="https://cdn.pixabay.com/audio/2023/03/15/audio_3e534a6873.mp3"></audio>
-  <audio id="sound2" src="https://cdn.pixabay.com/audio/2022/03/15/audio_49f8fdf0fc.mp3"></audio>
-  <audio id="sound3" src="https://cdn.pixabay.com/audio/2021/08/04/audio_37f6db95f6.mp3"></audio>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js?v=20240301"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0?v=20240301"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js?v=20240301"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js?v=20240301"></script>
   <style>
+    :root {
+      /* Dark Theme */
+      --bg-dark: #0f172a;
+      --surface-dark: #1e293b;  
+      --text-dark: #cbd5e1;       
+      --primary-dark: #00e0ff;   
+      --secondary-dark: #9333ea;  
+      --accent-dark: #00ff9d;     
+
+      /* Light Theme */
+      --bg-light: #f8fafc;        
+      --surface-light: #ffffff;  
+      --text-light: #0f172a;      
+      --primary-light: #0066cc;    
+      --secondary-light: #7c3aed;  
+      --accent-light: #00a86b;     
+
+      /* Common */
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+
     body {
       margin: 0;
-      font-family: 'Comic Neue', cursive;
-      background-color: #121212;
-      color: #000000;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+      line-height: 1.6;
     }
-    .container {
-      background-color: #1e1e1e;
+
+    .light-mode {
+      --bg-dark: var(--bg-light);
+      --surface-dark: var(--surface-light);
+      --text-dark: var(--text-light);
+      --primary-dark: var(--primary-light);
+      --secondary-dark: var(--secondary-light);
+      --accent-dark: var(--accent-light);
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
       padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #000000;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
-    input,
-    select,
-    textarea,
-    button {
-      background-color: #2a2a2a;
-      color: #000000;
+
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      font-size: 2rem;
+      margin: 0;
+      color: white;
+      letter-spacing: 1px;
+    }
+
+    .header-controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .theme-toggle,
+    .language-select {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
       border: none;
-      border-radius: 8px;
-      padding: 0.75rem;
-      width: 100%;
+      border-radius: var(--border-radius);
+      padding: 0.5rem 1rem;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      backdrop-filter: blur(5px);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.7em top 50%, 0 0;
+      background-size: 1.5em auto;
+      padding-right: 2.5em; 
+    }
+
+    .language-select option {
+      background-color: var(--surface-dark); 
+      color: var(--text-dark); 
+    }
+
+    .light-mode .language-select {
+      background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    }
+
+    .theme-toggle:hover,
+    .language-select:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Content Area Styling - Replaces .container */
+    .content-area {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: var(--surface-dark);
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s;
     }
-    input:hover,
-    select:hover,
-    textarea:hover,
-    button:hover {
-      background-color: #4a90e2;
-      color: #ffffff;
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease-out;
     }
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid #00c9ff;
-      background-color: #333333;
-      color: #ffffff;
+
+    .screen.active {
+      display: block;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .screen h2 {
+      color: var(--secondary-dark);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.5rem;
+      font-family: 'Orbitron', sans-serif; 
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: block; /* Change from inline-block for full width on smaller screens */
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-dark);
+      color: var(--bg-dark); 
+      border: none;
+      border-radius: var(--border-radius);
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700; 
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      text-decoration: none;
+      text-align: center;
+      width: 100%; /* Full width */
+      margin: 0.5rem 0; /* Consistent margin */
+    }
+
+    .btn:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 255, 157, 0.3);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .button-group .btn {
+      flex: 1; /* Distribute space evenly */
+      margin: 0; /* Remove individual margins */
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--surface-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--text-dark);
+      font-family: 'Roboto', sans-serif;
+      transition: all var(--transition-speed);
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 2px rgba(0, 224, 255, 0.3);
+    }
+
     .checkbox-group label {
       display: block;
       margin: 0.4rem 0;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-      padding: 6px 8px;
-      border-radius: 6px;
-      color: #000000;
+      padding: 0.5rem;
+      border-radius: var(--border-radius);
+      background-color: var(--surface-dark);
+      transition: all var(--transition-speed);
     }
+
     .checkbox-group label:hover {
-      background-color: #2d2d2d;
-      color: #ffffff;
+      background-color: rgba(0, 224, 255, 0.1);
     }
-    .question {
-      font-weight: bold;
-      margin-bottom: 1rem;
+
+    .checkbox-group input[type="checkbox"],
+    .checkbox-group input[type="radio"] {
+      margin-right: 0.5rem;
     }
-    .banner {
+
+    /* Footer */
+    .footer {
       text-align: center;
-      background-color: #1f1f1f;
-      color: #00c9ff;
-      font-size: 2rem;
-      padding: 1rem;
+      padding: 2rem 1rem;
+      color: var(--text-dark);
+      font-size: 0.875rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Chart Containers for Larger Graphs */
+    .chart-container {
+      width: 95%; /* Make it wider */
+      max-width: 800px; /* Increase max-width */
+      margin: auto;
+      margin-top: 30px; /* Add some space between them */
+    }
+
+    canvas {
+      display: block; /* Ensure canvas is block-level */
+      max-width: 100%; /* Ensure responsiveness */
+      height: auto; /* Maintain aspect ratio */
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-controls {
+        flex-direction: column;
+        top: 0.5rem;
+        right: 0.5rem;
+        gap: 0.25rem;
+      }
+      .button-group {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="banner">AI Career Guide</div>
-
-  <!-- Screens -->
-  <div id="screen-language" class="container screen active">
-    <div class="question">Choose Language</div>
-    <button onclick="setLanguage('English')">English</button>
-    <button onclick="setLanguage('Arabic')">Arabic</button>
-    <button onclick="setLanguage('Hindi')">Hindi</button>
-    <button onclick="setLanguage('Urdu')">Urdu</button>
-    <button onclick="setLanguage('Malayalam')">Malayalam</button>
-    <button onclick="setLanguage('Tagalog')">Tagalog</button>
-    <button onclick="setLanguage('Tamil')">Tamil</button>
-    <button onclick="setLanguage('Bengali')">Bengali</button>
-    <button onclick="setLanguage('Pashto')">Pashto</button>
-    <button onclick="setLanguage('Persian')">Persian</button>
-  </div>
-
-  <div id="screen-name" class="container screen">
-    <div class="question">Enter Your Name</div>
-    <input type="text" id="user-name" placeholder="Your Name" />
-    <button onclick="goToScreen('screen-grade')">Next</button>
-  </div>
-
-  <div id="screen-grade" class="container screen">
-    <div class="question">Select Grade</div>
-    <button onclick="selectGrade('10')">10th Grade</button>
-    <button onclick="selectGrade('12')">12th Grade</button>
-  </div>
-
-  <div id="screen-stream" class="container screen">
-    <div class="question">Select Stream (12th only)</div>
-    <button onclick="selectStream('Science')">Science</button>
-    <button onclick="selectStream('Commerce')">Commerce</button>
-    <button onclick="selectStream('Arts')">Arts</button>
-  </div>
-
-  <div id="screen-subjects" class="container screen">
-    <div class="question">Enter Subject Marks (%)</div>
-    <div id="subjects-container"></div>
-    <button onclick="goToScreen('screen-fav-subjects')">Next</button>
-  </div>
-
-  <div id="screen-fav-subjects" class="container screen">
-    <div class="question">Favorite Subjects</div>
-    <div class="checkbox-group" id="fav-subjects-list">
-      <label><input type="checkbox" value="Math"> Math</label>
-      <label><input type="checkbox" value="Science"> Science</label>
-      <label><input type="checkbox" value="English"> English</label>
-      <label><input type="checkbox" value="AI"> AI</label>
+  <header class="header">
+    <h1>AI Career Guide</h1>
+    <div class="header-controls">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+      <select id="languageSelect" class="language-select" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ur">اردو</option>
+        <option value="ml">മലയാളം</option>
+        <option value="tl">Tagalog</option>
+        <option value="ta">தமிழ்</option>
+        <option value="bn">বাংলা</option>
+        <option value="ps">پښتو</option>
+        <option value="fa">فارسی</option>
+      </select>
     </div>
-    <button onclick="goToScreen('screen-skills')">Next</button>
-  </div>
-
-  <div id="screen-skills" class="container screen">
-    <div class="question">Hobbies & Skills</div>
-    <div class="checkbox-group" id="skills-list">
-      <label><input type="checkbox" value="Coding"> Coding</label>
-      <label><input type="checkbox" value="Design"> Design</label>
-      <label><input type="checkbox" value="Helping"> Helping</label>
-      <label><input type="checkbox" value="Business"> Business</label>
-      <label><input type="checkbox" value="Leadership"> Leadership</label>
-      <label><input type="checkbox" value="Reading"> Reading</label>
+  </header>
+  
+  <main class="content-area">
+    <!-- Screens -->
+    <div id="screen-name" class="screen active">
+      <h2 data-key="enterName">Enter Your Name</h2>
+      <input type="text" id="user-name" class="form-control" placeholder="Your Name" />
+      <div class="button-group">
+        <!-- console.log added directly here for debugging -->
+        <button class="btn" onclick="console.log('Button on name screen clicked!'); goToScreen('screen-grade')">Next</button>
+      </div>
     </div>
-    <button onclick="goToScreen('screen-activities')">Next</button>
-  </div>
 
-  <div id="screen-activities" class="container screen">
-    <div class="question">What do you enjoy doing most?</div>
-    <div class="checkbox-group" id="activity-list">
-      <label><input type="checkbox" value="Building apps"> Building apps</label>
-      <label><input type="checkbox" value="Solving puzzles"> Solving puzzles</label>
-      <label><input type="checkbox" value="Helping others"> Helping others</label>
-      <label><input type="checkbox" value="Making videos"> Making videos</label>
-      <label><input type="checkbox" value="Running a business"> Running a business</label>
+    <div id="screen-grade" class="screen">
+      <h2 data-key="selectGrade">Select Grade</h2>
+      <button class="btn" onclick="selectGrade('10')"><span data-key="grade10">10th Grade</span></button>
+      <button class="btn" onclick="selectGrade('12')"><span data-key="grade12">12th Grade</span></button>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+      </div>
     </div>
-    <button onclick="captureActivities()">Next</button>
-  </div>
 
-  <div id="screen-jobtype" class="container screen">
-    <div class="question">What type of job do you imagine yourself in?</div>
-    <div class="checkbox-group" id="jobtype-list">
-      <label><input type="radio" name="jobtype" value="Tech"> Technology-based</label>
-      <label><input type="radio" name="jobtype" value="Medical"> Medical field</label>
-      <label><input type="radio" name="jobtype" value="Creative"> Creative/Design</label>
-      <label><input type="radio" name="jobtype" value="Business"> Business/Management</label>
+    <div id="screen-stream" class="screen">
+      <h2 data-key="selectStream">Select Stream (12th only)</h2>
+      <button class="btn" onclick="selectStream('Science')"><span data-key="streamScience">Science</span></button>
+      <button class="btn" onclick="selectStream('Commerce')"><span data-key="streamCommerce">Commerce</span></button>
+      <button class="btn" onclick="selectStream('Arts')"><span data-key="streamArts">Arts</span></button>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+      </div>
     </div>
-    <button onclick="captureJobType()">Finish & Show Results</button>
-  </div>
-  <div id="screen-results" class="container screen">
-    <div class="question">Your Career Guidance</div>
-    <canvas id="marksChart"></canvas>
-    <canvas id="interestChart"></canvas>
-    <div id="career-suggestion" style="margin-top:2rem;font-size:1.1rem;"></div>
-    <br>
-    <button onclick="downloadResult('jpg')">Download JPG</button>
-    <button onclick="downloadResult('pdf')">Download PDF</button>
-  </div>
 
-  <div class="footer">© 2025 Sai Pranav, 10D - IIS</div>
+    <div id="screen-subjects" class="screen">
+      <h2 data-key="enterMarks">Enter Subject Marks (%)</h2>
+      <div id="subjects-container" class="form-group"></div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="goToScreen('screen-fav-subjects')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-fav-subjects" class="screen">
+      <h2 data-key="favoriteSubjects">Favorite Subjects</h2>
+      <div class="checkbox-group" id="fav-subjects-list">
+        <label><input type="checkbox" value="Math"> Math</label>
+        <label><input type="checkbox" value="Science"> Science</label>
+        <label><input type="checkbox" value="English"> English</label>
+        <label><input type="checkbox" value="AI"> AI</label>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="goToScreen('screen-skills')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-skills" class="screen">
+      <h2 data-key="skills">Hobbies & Skills</h2>
+      <div class="checkbox-group" id="skills-list">
+        <label><input type="checkbox" value="Coding"> Coding</label>
+        <label><input type="checkbox" value="Design"> Design</label>
+        <label><input type="checkbox" value="Helping"> Helping</label>
+        <label><input type="checkbox" value="Business"> Business</label>
+        <label><input type="checkbox" value="Leadership"> Leadership</label>
+        <label><input type="checkbox" value="Reading"> Reading</label>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="goToScreen('screen-activities')">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-activities" class="screen">
+      <h2 data-key="activities">What do you enjoy doing most?</h2>
+      <div class="checkbox-group" id="activity-list">
+        <label><input type="checkbox" value="Building apps"> Building apps</label>
+        <label><input type="checkbox" value="Solving puzzles"> Solving puzzles</label>
+        <label><input type="checkbox" value="Helping others"> Helping others</label>
+        <label><input type="checkbox" value="Making videos"> Making videos</label>
+        <label><input type="checkbox" value="Running a business"> Running a business</label>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="captureActivities()">Next</button>
+      </div>
+    </div>
+
+    <div id="screen-jobtype" class="screen">
+      <h2 data-key="jobtype">What type of job do you imagine yourself in?</h2>
+      <div class="checkbox-group" id="jobtype-list">
+        <label><input type="radio" name="jobtype" value="Tech"> Technology-based</label>
+        <label><input type="radio" name="jobtype" value="Medical"> Medical field</label>
+        <label><input type="radio" name="jobtype" value="Creative"> Creative/Design</label>
+        <label><input type="radio" name="jobtype" value="Business"> Business/Management</label>
+      </div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="captureJobType()"><span data-key="showResults">Finish & Show Results</span></button>
+      </div>
+    </div>
+
+    <div id="screen-results" class="screen">
+      <h2 id="results-heading" data-key="careerHeading">Your Career Guidance</h2>
+        <div class="chart-container">
+        <canvas id="marksChart"></canvas>
+        </div>
+        <div class="chart-container">
+        <canvas id="interestChart"></canvas>
+      </div>
+      <div id="career-suggestion" class="form-group"></div>
+      <div class="button-group">
+        <button class="btn" onclick="goToPrevScreen()">Back</button>
+        <button class="btn" onclick="downloadResult('jpg')">Download JPG</button>
+        <button class="btn" onclick="downloadResult('pdf')">Download PDF</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2025 Sai Pranav, 10D - IIS
+  </footer>
 
 <script>
+  // NEW: Register Chart.js Datalabels plugin
+  Chart.register(ChartDataLabels);
 
-    const translations = {
-  English: {
-    enterName: "Enter Your Name",
-    next: "Next",
-    selectGrade: "Select Grade",
-    grade10: "10th Grade",
-    grade12: "12th Grade",
-    selectStream: "Select Stream (12th only)",
-    streamScience: "Science",
-    streamCommerce: "Commerce",
-    streamArts: "Arts",
-    enterMarks: "Enter Subject Marks (%)",
-    favoriteSubjects: "Favorite Subjects",
-    skills: "Hobbies & Skills",
-    showResults: "Show Results",
-    careerHeading: "Your Career Guidance"
-  },
-  Arabic: {
-    enterName: "أدخل اسمك",
-    next: "التالي",
-    selectGrade: "اختر الصف",
-    grade10: "الصف العاشر",
-    grade12: "الصف الثاني عشر",
-    selectStream: "اختر المسار (للصف الثاني عشر فقط)",
-    streamScience: "علمي",
-    streamCommerce: "تجاري",
-    streamArts: "أدبي",
-    enterMarks: "أدخل درجات المواد (%)",
-    favoriteSubjects: "المواد المفضلة",
-    skills: "الهوايات والمهارات",
-    showResults: "عرض النتائج",
-    careerHeading: "توجيه مهني"
-  },
-  Hindi: {
-    enterName: "अपना नाम दर्ज करें",
-    next: "आगे",
-    selectGrade: "कक्षा चुनें",
-    grade10: "10वीं कक्षा",
-    grade12: "12वीं कक्षा",
-    selectStream: "स्ट्रीम चुनें (केवल 12वीं)",
-    streamScience: "विज्ञान",
-    streamCommerce: "वाणिज्य",
-    streamArts: "कला",
-    enterMarks: "विषय के अंक दर्ज करें (%)",
-    favoriteSubjects: "पसंदीदा विषय",
-    skills: "रुचियाँ और कौशल",
-    showResults: "परिणाम दिखाएँ",
-    careerHeading: "आपका करियर मार्गदर्शन"
-  },
-  Urdu: {
-    enterName: "اپنا نام درج کریں",
-    next: "اگلا",
-    selectGrade: "کلاس منتخب کریں",
-    grade10: "دسویں جماعت",
-    grade12: "بارہویں جماعت",
-    selectStream: "اسٹریم منتخب کریں (صرف بارہویں)",
-    streamScience: "سائنس",
-    streamCommerce: "کامرس",
-    streamArts: "آرٹس",
-    enterMarks: "مضمون کے نمبر درج کریں (%)",
-    favoriteSubjects: "پسندیدہ مضامین",
-    skills: "مشغلے اور مہارتیں",
-    showResults: "نتائج دکھائیں",
-    careerHeading: "آپ کی کیریئر رہنمائی"
-  },
-  Malayalam: {
-    enterName: "താങ്കളുടെ പേര് നൽകുക",
-    next: "അടുത്തത്",
-    selectGrade: "ക്ലാസ് തിരഞ്ഞെടുക്കുക",
-    grade10: "പത്താം ക്ലാസ്",
-    grade12: "പന്ത്രണ്ടാം ക്ലാസ്",
-    selectStream: "Stream തിരഞ്ഞെടുക്കുക (പന്ത്രണ്ടാം ക്ലാസ് മാത്രം)",
-    streamScience: "സയൻസ്",
-    streamCommerce: "കോമേഴ്‌സ്",
-    streamArts: "ആർട്സ്",
-    enterMarks: "വിഷയ മാർക്കുകൾ നൽകുക (%)",
-    favoriteSubjects: "ഇഷ്ടപ്പെട്ട വിഷയങ്ങൾ",
-    skills: "രുചികളും കഴിവുകളും",
-    showResults: "ഫലങ്ങൾ കാണിക്കുക",
-    careerHeading: "നിങ്ങളുടെ കരിയർ മാർഗ്ഗനിർദ്ദേശം"
-  },
-  Tagalog: {
-    enterName: "Ilagay ang Iyong Pangalan",
-    next: "Susunod",
-    selectGrade: "Pumili ng Baitang",
-    grade10: "Ika-10 Baitang",
-    grade12: "Ika-12 Baitang",
-    selectStream: "Pumili ng Stream (12 lamang)",
-    streamScience: "Agham",
-    streamCommerce: "Komersyo",
-    streamArts: "Sining",
-    enterMarks: "Ilagay ang Marka ng Paksa (%)",
-    favoriteSubjects: "Mga Paboritong Paksa",
-    skills: "Mga Libangan at Kasanayan",
-    showResults: "Ipakita ang Resulta",
-    careerHeading: "Gabay sa Iyong Karera"
-  },
-  Tamil: {
-    enterName: "உங்கள் பெயரை உள்ளிடவும்",
-    next: "அடுத்தது",
-    selectGrade: "வகுப்பை தேர்ந்தெடுக்கவும்",
-    grade10: "பத்தாம் வகுப்பு",
-    grade12: "பன்னிரண்டாம் வகுப்பு",
-    selectStream: "Stream தேர்ந்தெடுக்கவும் (பன்னிரண்டாம் மட்டும்)",
-    streamScience: "அறிவியல்",
-    streamCommerce: "வாணிபம்",
-    streamArts: "கலை",
-    enterMarks: "பாடவகுப்புகளின் மதிப்பெண்களை உள்ளிடவும் (%)",
-    favoriteSubjects: "விருப்பமான பாடங்கள்",
-    skills: "திறமைகள் மற்றும் பொழுதுபோக்கு",
-    showResults: "முடிவுகளை காண்பி",
-    careerHeading: "உங்கள் தொழில் வழிகாட்டி"
-  },
-  Bengali: {
-    enterName: "আপনার নাম লিখুন",
-    next: "পরবর্তী",
-    selectGrade: "শ্রেণী নির্বাচন করুন",
-    grade10: "১০ম শ্রেণী",
-    grade12: "১২শ শ্রেণী",
-    selectStream: "স্ট্রীম নির্বাচন করুন (শুধুমাত্র ১২শ)",
-    streamScience: "বিজ্ঞান",
-    streamCommerce: "বাণিজ্য",
-    streamArts: "মানবিক",
-    enterMarks: "বিষয়ের নম্বর লিখুন (%)",
-    favoriteSubjects: "পছন্দের বিষয়",
-    skills: "রুচি ও দক্ষতা",
-    showResults: "ফলাফল দেখান",
-    careerHeading: "আপনার ক্যারিয়ার গাইডেন্স"
-  },
-  Pashto: {
-    enterName: "خپل نوم ولیکئ",
-    next: "بل",
-    selectGrade: "صنف وټاکئ",
-    grade10: "لسم ټولګی",
-    grade12: "دولسم ټولګی",
-    selectStream: "سټریم وټاکئ (یوازې 12)",
-    streamScience: "ساینس",
-    streamCommerce: "تجارت",
-    streamArts: "هنرونه",
-    enterMarks: "د مضمون نمرې داخل کړئ (%)",
-    favoriteSubjects: "خوښ مضمونونه",
-    skills: "مهارتونه او شوقونه",
-    showResults: "پایلې وښایئ",
-    careerHeading: "ستاسو د مسلک لارښود"
-  },
-  Persian: {
-    enterName: "نام خود را وارد کنید",
-    next: "بعدی",
-    selectGrade: "پایه تحصیلی را انتخاب کنید",
-    grade10: "پایه دهم",
-    grade12: "پایه دوازدهم",
-    selectStream: "رشته را انتخاب کنید (فقط پایه دوازدهم)",
-    streamScience: "علوم",
-    streamCommerce: "تجارت",
-    streamArts: "هنرها",
-    enterMarks: "نمرات دروس را وارد کنید (%)",
-    favoriteSubjects: "دروس مورد علاقه",
-    skills: "مهارت‌ها و سرگرمی‌ها",
-    showResults: "نمایش نتایج",
-    careerHeading: "راهنمای شغلی شما"
+  // Theme Toggle
+  function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (document.body.classList.contains('light-mode')) {
+      themeToggle.textContent = '☀️ / 🌙';
+    } else {
+      themeToggle.textContent = '🌙 / ☀️';
+    }
+    // Redraw charts if on results screen to ensure color update
+    if (currentScreenId === 'screen-results') {
+      drawCharts();
+    }
   }
-};
 
-function applyLanguage(lang) {
-  const t = translations[lang];
-  if (!t) return;
+  // --- Translation Data ---
+  const translations = {
+    "en": {
+      "page_title": "AI Career Guide",
+      "header_title": "AI Career Guide 🌟",
+      "enterName": "Enter Your Name",
+      "next": "Next",
+      "back": "Back",
+      "selectGrade": "Select Grade",
+      "grade10": "10th Grade",
+      "grade12": "12th Grade",
+      "selectStream": "Select Stream (12th only)",
+      "streamScience": "Science",
+      "streamCommerce": "Commerce",
+      "streamArts": "Arts",
+      "enterMarks": "Enter Subject Marks (%)",
+      "favoriteSubjects": "Favorite Subjects",
+      "skills": "Hobbies & Skills",
+      "activities": "What do you enjoy doing most?",
+      "jobtype": "What type of job do you imagine yourself in?",
+      "showResults": "Finish & Show Results",
+      "careerHeading": "Your Career Guidance",
+      "downloadJpg": "Download JPG",
+      "downloadPdf": "Download PDF",
+      "footer_text": "© 2025 Sai Pranav, 10D - IIS"
+    },
+    "ar": {
+      "page_title": "دليل المسار المهني بالذكاء الاصطناعي",
+      "header_title": "دليل المسار المهني بالذكاء الاصطناعي 🌟",
+      "enterName": "أدخل اسمك",
+      "next": "التالي",
+      "back": "رجوع",
+      "selectGrade": "اختر الصف",
+      "grade10": "الصف العاشر",
+      "grade12": "الصف الثاني عشر",
+      "selectStream": "اختر المسار (للصف الثاني عشر فقط)",
+      "streamScience": "علمي",
+      "streamCommerce": "تجاري",
+      "streamArts": "أدبي",
+      "enterMarks": "أدخل درجات المواد (%)",
+      "favoriteSubjects": "المواد المفضلة",
+      "skills": "الهوايات والمهارات",
+      "activities": "ماذا تستمتع بفعله أكثر؟",
+      "jobtype": "ما نوع الوظيفة التي تتخيل نفسك فيها؟",
+      "showResults": "إنهاء وعرض النتائج",
+      "careerHeading": "توجيه مهني",
+      "downloadJpg": "تنزيل JPG",
+      "downloadPdf": "تنزيل PDF",
+      "footer_text": "© 2025 ساي براناف، 10D - IIS"
+    },
+    "hi": {
+      "page_title": "एआई करियर गाइड",
+      "header_title": "एआई करियर गाइड 🌟",
+      "enterName": "अपना नाम दर्ज करें",
+      "next": "आगे",
+      "back": "पीछे",
+      "selectGrade": "कक्षा चुनें",
+      "grade10": "10वीं कक्षा",
+      "grade12": "12वीं कक्षा",
+      "selectStream": "स्ट्रीम चुनें (केवल 12वीं)",
+      "streamScience": "विज्ञान",
+      "streamCommerce": "वाणिज्य",
+      "streamArts": "कला",
+      "enterMarks": "विषय के अंक दर्ज करें (%)",
+      "favoriteSubjects": "पसंदीदा विषय",
+      "skills": "रुचियाँ और कौशल",
+      "activities": "आपको सबसे ज्यादा क्या करना पसंद है?",
+      "jobtype": "आप किस प्रकार की नौकरी में खुद को देखते हैं?",
+      "showResults": "पूरा करें और परिणाम दिखाएं",
+      "careerHeading": "आपका करियर मार्गदर्शन",
+      "downloadJpg": "जेपीजी डाउनलोड करें",
+      "downloadPdf": "पीडीएफ डाउनलोड करें",
+      "footer_text": "© 2025 साई प्रणव, 10D - IIS"
+    },
+    "ur": {
+      "page_title": "اے آئی کیریئر گائیڈ",
+      "header_title": "اے آئی کیریئر گائیڈ 🌟",
+      "enterName": "اپنا نام درج کریں",
+      "next": "اگلا",
+      "back": "پیچھے",
+      "selectGrade": "کلاس منتخب کریں",
+      "grade10": "دسویں جماعت",
+      "grade12": "بارہویں جماعت",
+      "selectStream": "اسٹریم منتخب کریں (صرف بارہویں)",
+      "streamScience": "سائنس",
+      "streamCommerce": "کامرس",
+      "streamArts": "آرٹس",
+      "enterMarks": "مضمون کے نمبر درج کریں (%)",
+      "favoriteSubjects": "پسندیدہ مضامین",
+      "skills": "مشغلے اور مہارتیں",
+      "activities": "آپ کو سب سے زیادہ کیا کرنا پسند ہے؟",
+      "jobtype": "آپ کس قسم کی ملازمت میں خود کو دیکھتے ہیں؟",
+      "showResults": "مکمل کریں اور نتائج دکھائیں",
+      "careerHeading": "آپ کی کیریئر رہنمائی",
+      "downloadJpg": "JPG ڈاؤن لوڈ کریں",
+      "downloadPdf": "PDF ڈاؤن لوڈ کریں",
+      "footer_text": "© 2025 سائی پراناو، 10D - IIS"
+    },
+    "ml": {
+      "page_title": "എഐ കരിയർ ഗൈഡ്",
+      "header_title": "എഐ കരിയർ ഗൈഡ് 🌟",
+      "enterName": "താങ്കളുടെ പേര് നൽകുക",
+      "next": "അടുത്തത്",
+      "back": "പുറകിലേക്ക്",
+      "selectGrade": "ക്ലാസ് തിരഞ്ഞെടുക്കുക",
+      "grade10": "പത്താം ക്ലാസ്",
+      "grade12": "പന്ത്രണ്ടാം ക്ലാസ്",
+      "selectStream": "Stream തിരഞ്ഞെടുക്കുക (പന്ത്രണ്ടാം ക്ലാസ് മാത്രം)",
+      "streamScience": "സയൻസ്",
+      "streamCommerce": "കോമേഴ്‌സ്",
+      "streamArts": "ആർട്സ്",
+      "enterMarks": "വിഷയ മാർക്കുകൾ നൽകുക (%)",
+      "favoriteSubjects": "ഇഷ്ടപ്പെട്ട വിഷയങ്ങൾ",
+      "skills": "രുചികളും കഴിവുകളും",
+      "activities": "നിങ്ങൾക്ക് ഏറ്റവും കൂടുതൽ ഇഷ്ടമുള്ളത് എന്താണ്?",
+      "jobtype": "ഏത് തരം ജോലിയിലാണ് നിങ്ങൾ സ്വയം കാണുന്നത്?",
+      "showResults": "പൂർത്തിയാക്കി ഫലങ്ങൾ കാണിക്കുക",
+      "careerHeading": "നിങ്ങളുടെ കരിയർ മാർഗ്ഗനിർദ്ദേശം",
+      "downloadJpg": "JPG ഡൗൺലോഡ് ചെയ്യുക",
+      "downloadPdf": "PDF ഡൗൺലോഡ് ചെയ്യുക",
+      "footer_text": "© 2025 സായി പ്രണവ്، 10D - IIS"
+    },
+    "tl": {
+      "page_title": "AI Career Guide",
+      "header_title": "AI Career Guide 🌟",
+      "enterName": "Ilagay ang Iyong Pangalan",
+      "next": "Susunod",
+      "back": "Bumalik",
+      "selectGrade": "Pumili ng Baitang",
+      "grade10": "Ika-10 Baitang",
+      "grade12": "Ika-12 Baitang",
+      "selectStream": "Pumili ng Stream (12 lamang)",
+      "streamScience": "Agham",
+      "streamCommerce": "Komersyo",
+      "streamArts": "Sining",
+      "enterMarks": "Ilagay ang Marka ng Paksa (%)",
+      "favoriteSubjects": "Mga Paboritong Paksa",
+      "skills": "Mga Libangan at Kasanayan",
+      "activities": "Ano ang pinakagusto mong gawin?",
+      "jobtype": "Anong uri ng trabaho ang naiisip mo para sa iyong sarili?",
+      "showResults": "Tapusin at Ipakita ang Resulta",
+      "careerHeading": "Gabay sa Iyong Karera",
+      "downloadJpg": "I-Download ang JPG",
+      "downloadPdf": "I-Download ang PDF",
+      "footer_text": "© 2025 Sai Pranav, 10D - IIS"
+    },
+    "ta": {
+      "page_title": "AI தொழில் வழிகாட்டி",
+      "header_title": "AI தொழில் வழிகாட்டி 🌟",
+      "enterName": "உங்கள் பெயரை உள்ளிடவும்",
+      "next": "அடுத்தது",
+      "back": "பின்புறம்",
+      "selectGrade": "வகுப்பை தேர்ந்தெடுக்கவும்",
+      "grade10": "பத்தாம் வகுப்பு",
+      "grade12": "பன்னிரண்டாம் வகுப்பு",
+      "selectStream": "Stream தேர்ந்தெடுக்கவும் (பன்னிரண்டாம் மட்டும்)",
+      "streamScience": "அறிவியல்",
+      "streamCommerce": "வாணிபம்",
+      "streamArts": "கலை",
+      "enterMarks": "பாடவகுப்புகளின் மதிப்பெண்களை உள்ளிடவும் (%)",
+      "favoriteSubjects": "விருப்பமான பாடங்கள்",
+      "skills": "திறமைகள் மற்றும் பொழுதுபோக்கு",
+      "activities": "நீங்கள் எதைச் செய்ய அதிகம் ரசிக்கிறீர்கள்?",
+      "jobtype": "எந்த வகையான வேலையில் உங்களை நீங்கள் கற்பனை செய்கிறீர்கள்?",
+      "showResults": "முடிவுகளைக் காண்பி",
+      "careerHeading": "உங்கள் தொழில் வழிகாட்டி",
+      "downloadJpg": "JPG பதிவிறக்கம்",
+      "downloadPdf": "PDF பதிவிறக்கம்",
+      "footer_text": "© 2025 சாய் பிரணவ், 10D - IIS"
+    },
+    "bn": {
+      "page_title": "এআই ক্যারিয়ার গাইড",
+      "header_title": "এআই ক্যারিয়ার গাইড 🌟",
+      "enterName": "আপনার নাম লিখুন",
+      "next": "পরবর্তী",
+      "back": "পেছনে",
+      "selectGrade": "শ্রেণী নির্বাচন করুন",
+      "grade10": "১০ম শ্রেণী",
+      "grade12": "১২শ শ্রেণী",
+      "selectStream": "স্ট্রীম নির্বাচন করুন (শুধুমাত্র ১২শ)",
+      "streamScience": "বিজ্ঞান",
+      "streamCommerce": "বাণিজ্য",
+      "streamArts": "মানবিক",
+      "enterMarks": "বিষয়ের নম্বর লিখুন (%)",
+      "favoriteSubjects": "পছন্দের বিষয়",
+      "skills": "রুচি ও দক্ষতা",
+      "activities": "আপনি কী করতে সবচেয়ে বেশি উপভোগ করেন?",
+      "jobtype": "আপনি নিজেকে কোন ধরণের চাকরিতে কল্পনা করেন?",
+      "showResults": "ফলাফল দেখান",
+      "careerHeading": "আপনার ক্যারিয়ার গাইডেন্স",
+      "downloadJpg": "JPG ডাউনলোড করুন",
+      "downloadPdf": "PDF ডাউনলোড করুন",
+      "footer_text": "© 2025 সাই প্রনব, 10D - IIS"
+    },
+    "ps": {
+      "page_title": "د AI مسلک لارښود",
+      "header_title": "د AI مسلک لارښود 🌟",
+      "enterName": "خپل نوم ولیکئ",
+      "next": "بل",
+      "back": "شاته",
+      "selectGrade": "صنف وټاکئ",
+      "grade10": "لسم ټولګی",
+      "grade12": "دولسم ټولګی",
+      "selectStream": "سټریم وټاکئ (یوازې 12)",
+      "streamScience": "ساینس",
+      "streamCommerce": "تجارت",
+      "streamArts": "هنرونه",
+      "enterMarks": "د مضمون نمرې داخل کړئ (%)",
+      "favoriteSubjects": "خوښ مضمونونه",
+      "skills": "مهارتونه او شوقونه",
+      "activities": "تاسو څه شی ډیر خوښوئ؟",
+      "jobtype": "تاسو په کوم ډول دندې کې ځان تصور کوئ؟",
+      "showResults": "پایلې وښایئ",
+      "careerHeading": "ستاسو د مسلک لارښود",
+      "downloadJpg": "JPG ډاونلوډ کړئ",
+      "downloadPdf": "PDF ډاونلوډ کړئ",
+      "footer_text": "© 2025 ساي پرانوف، 10D - IIS"
+    },
+    "fa": {
+      "page_title": "راهنمای شغلی هوش مصنوعی",
+      "header_title": "راهنمای شغلی هوش مصنوعی 🌟",
+      "enterName": "نام خود را وارد کنید",
+      "next": "بعدی",
+      "back": "قبلی",
+      "selectGrade": "پایه تحصیلی را انتخاب کنید",
+      "grade10": "پایه دهم",
+      "grade12": "پایه دوازدهم",
+      "selectStream": "رشته را انتخاب کنید (فقط پایه دوازدهم)",
+      "streamScience": "علوم",
+      "streamCommerce": "تجارت",
+      "streamArts": "هنرها",
+      "enterMarks": "نمرات دروس را وارد کنید (%)",
+      "favoriteSubjects": "دروس مورد علاقه",
+      "skills": "مهارت‌ها و سرگرمی‌ها",
+      "activities": "چه چیزی را بیشتر دوست دارید انجام دهید؟",
+      "jobtype": "چه نوع شغلی را برای خود تصور می‌کنید؟",
+      "showResults": "نمایش نتایج",
+      "careerHeading": "راهنمای شغلی شما",
+      "downloadJpg": "دانلود JPG",
+      "downloadPdf": "دانلود PDF",
+      "footer_text": "© 2025 سای پرناو، 10D - IIS"
+    }
+  };
 
-  document.querySelector('#screen-name .question').innerText = t.enterName;
-  document.querySelector('#screen-name button').innerText = t.next;
-  document.querySelector('#screen-grade .question').innerText = t.selectGrade;
-  document.querySelectorAll('#screen-grade button')[0].innerText = t.grade10;
-  document.querySelectorAll('#screen-grade button')[1].innerText = t.grade12;
-  document.querySelector('#screen-stream .question').innerText = t.selectStream;
-  document.querySelectorAll('#screen-stream button')[0].innerText = t.streamScience;
-  document.querySelectorAll('#screen-stream button')[1].innerText = t.streamCommerce;
-  document.querySelectorAll('#screen-stream button')[2].innerText = t.streamArts;
-  document.querySelector('#screen-subjects .question').innerText = t.enterMarks;
-  document.querySelector('#screen-fav-subjects .question').innerText = t.favoriteSubjects;
-  document.querySelector('#screen-skills .question').innerText = t.skills;
-  document.querySelector('#screen-skills button').innerText = t.next;
-  document.querySelector('#screen-results .question').innerText = t.careerHeading;
-}
+  let currentLanguage = 'en';
+  let screenHistory = []; // Stack to keep track of visited screens for "Back" button
+  let currentScreenId = null;
 
+  function changeLanguage(lang) {
+    currentLanguage = lang;
+    
+    // Set text direction based on language
+    document.body.style.direction = (lang === 'ar' || lang === 'ur' || lang === 'ps' || lang === 'fa') ? 'rtl' : 'ltr';
+
+    document.querySelectorAll('[data-key]').forEach(element => {
+      const key = element.getAttribute('data-key');
+      const translatedText = translations[lang] && translations[lang][key] ? translations[lang][key] : translations['en'][key];
+      
+      if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+          element.placeholder = translatedText;
+      } else {
+          element.textContent = translatedText;
+      }
+    });
+
+    // Special handling for results heading which uses an ID directly
+    const resultsHeading = document.getElementById('results-heading');
+    if (resultsHeading) {
+        resultsHeading.textContent = translations[currentLanguage]["careerHeading"];
+    }
+  }
+
+
+  function goToScreen(newScreenId) {
+    console.log(`Moving to screen: ${newScreenId}`); // Added for debugging
+    if (currentScreenId) {
+      document.getElementById(currentScreenId).classList.remove('active');
+      screenHistory.push(currentScreenId); // Push current screen to history
+    }
+    
+    currentScreenId = newScreenId;
+    document.getElementById(newScreenId).classList.add('active');
+    changeLanguage(currentLanguage); // Re-apply language to ensure new screen elements are translated
+  }
+
+  function goToPrevScreen() {
+    if (screenHistory.length > 0) {
+      document.getElementById(currentScreenId).classList.remove('active');
+      const prevScreenId = screenHistory.pop(); // Pop from history
+      currentScreenId = prevScreenId;
+      document.getElementById(prevScreenId).classList.add('active');
+      changeLanguage(currentLanguage); // Re-apply language to previous screen
+    }
+  }
+
+  // Initial user data storage
   let userData = {
     name: '',
-    language: '',
+    language: 'English', // Default language until changed via header select
     grade: '',
     stream: '',
     subjects: {},
@@ -374,17 +730,6 @@ function applyLanguage(lang) {
     activities: [],
     jobType: ''
   };
-
-  function goToScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-
-  function setLanguage(lang) {
-    userData.language = lang;
-    applyLanguage(lang);
-    goToScreen('screen-name');
-  }
 
   function selectGrade(grade) {
     userData.grade = grade;
@@ -420,7 +765,7 @@ function applyLanguage(lang) {
     }
 
     subjects.forEach(sub => {
-      container.innerHTML += `<label>${sub}: <input type="number" min="0" max="100" id="mark-${sub}" placeholder="e.g. 85" /></label><br/>`;
+      container.innerHTML += `<div class="form-group"><label class="form-label">${sub}: <input type="number" min="0" max="100" id="mark-${sub}" class="form-control" placeholder="e.g. 85" /></label></div>`;
     });
   }
 
@@ -450,258 +795,287 @@ function applyLanguage(lang) {
     userData.favSubjects = Array.from(document.querySelectorAll('#fav-subjects-list input:checked')).map(cb => cb.value);
     userData.skills = Array.from(document.querySelectorAll('#skills-list input:checked')).map(cb => cb.value);
 
-    const heading = document.querySelector('#screen-results .question');
-    heading.innerText = `${userData.name} - ${userData.grade}th Career Guidance`;
+    // Console logs to debug data being collected
+    console.log("Subjects Data:", userData.subjects);
+    console.log("Skills Data:", userData.skills);
 
-    drawCharts();
+    // Update heading translation first
+    const resultsHeading = document.getElementById('results-heading');
+    if (resultsHeading) {
+        resultsHeading.textContent = translations[currentLanguage]["careerHeading"];
+    }
+
+    // --- CRUCIAL CHANGE: Navigate to screen-results FIRST, then draw charts ---
+    // This ensures the canvas elements are visible and have dimensions when Chart.js tries to draw.
+    goToScreen('screen-results'); 
+    
+    // Now call drawCharts() AFTER the screen is active and visible
+    drawCharts(); 
+
     suggestCareers();
-    goToScreen('screen-results');
   }
 
+  let marksChartInstance = null; // Global variable to hold the marks chart instance
+  let interestChartInstance = null; // Global variable to hold the interest chart instance
+
+  // --- FUNCTION TO DRAW BOTH GRAPHS ---
   function drawCharts() {
     const ctx1 = document.getElementById('marksChart').getContext('2d');
     const ctx2 = document.getElementById('interestChart').getContext('2d');
     const marks = Object.values(userData.subjects);
     const markLabels = Object.keys(userData.subjects);
 
-    new Chart(ctx1, {
+    // Determine colors based on current theme
+    const rootStyle = getComputedStyle(document.documentElement);
+    const isLightMode = document.body.classList.contains('light-mode');
+
+    // Bar color for marks chart
+    const barColor = isLightMode ? rootStyle.getPropertyValue('--primary-light').trim() : rootStyle.getPropertyValue('--accent-dark').trim();
+
+    // Grid line color
+    const gridColor = isLightMode ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.4)'; // Increased opacity for better visibility
+
+    // Text color for chart elements
+    const chartTextColor = isLightMode ? rootStyle.getPropertyValue('--text-light').trim() : rootStyle.getPropertyValue('--text-dark').trim();
+
+
+    // Destroy existing chart instances if they exist to prevent duplicates
+    if (marksChartInstance) marksChartInstance.destroy();
+    if (interestChartInstance) interestChartInstance.destroy();
+
+    // Create the Marks Bar Chart
+    marksChartInstance = new Chart(ctx1, {
       type: 'bar',
       data: {
         labels: markLabels,
         datasets: [{
-          label: 'Subject Marks',
+          label: 'Subject Marks', 
           data: marks,
-          backgroundColor: '#00ffe1'
+          backgroundColor: barColor, // Dynamically set color based on theme
+          borderColor: 'transparent' // No black border
         }]
       },
       options: {
         responsive: true,
+        color: chartTextColor, // Global chart text color
         plugins: {
-          legend: { display: false }
+          legend: { 
+            display: false, // Hides the "Subject Marks" label on the chart
+            labels: {
+                color: chartTextColor // Ensures legend text color matches theme
+            }
+          },
+          title: { 
+              display: false, // You can set to true and add text property if you want a title
+              color: chartTextColor
+          },
+          tooltip: { // Ensure tooltips are also visible and themed
+              titleColor: chartTextColor,
+              bodyColor: chartTextColor,
+              borderColor: chartTextColor,
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.8)' : 'rgba(30,41,59,0.8)', // surface-dark with transparency
+              borderWidth: 1
+          }
         },
         scales: {
-          y: { beginAtZero: true, max: 100 }
+          y: { 
+            beginAtZero: true, 
+            max: 100,
+            ticks: {
+                color: chartTextColor // Ensures Y-axis labels match theme
+            },
+            grid: {
+                color: gridColor // Ensures grid lines are subtle and match theme
+            }
+          },
+          x: {
+            ticks: {
+                color: chartTextColor // Ensures X-axis labels match theme
+            },
+            grid: {
+                color: gridColor // Ensures grid lines are subtle and match theme
+            }
+          }
         }
       }
     });
 
-    new Chart(ctx2, {
+    // Create the Hobbies & Skills (Interests) Pie Chart
+    interestChartInstance = new Chart(ctx2, {
       type: 'pie',
       data: {
-        labels: userData.skills,
+        labels: userData.skills, // Uses the selected skills as labels for pie slices
         datasets: [{
-          data: userData.skills.map(() => Math.floor(Math.random() * 100)),
-          backgroundColor: ['#00ffe1','#5e60ce','#7400b8','#80ffdb','#64dfdf','#b8c0ff']
+          data: userData.skills.length > 0 ? userData.skills.map(() => 100 / userData.skills.length) : [], 
+          backgroundColor: [ // A diverse set of colors for the pie chart slices
+            '#00e0ff', '#9333ea', '#00ff9d', '#ff6666', '#ffcc00', '#66ccff',
+            '#ff8c00', '#32cd32', '#8a2be2', '#dc143c', '#00ced1', '#ffd700',
+            '#4b0082', '#f08080', '#20b2aa', '#7b68ee' 
+          ],
+          borderColor: 'transparent' // No black border for pie slices
         }]
+      },
+      options: {
+        responsive: true,
+        color: chartTextColor, // Global chart text color
+        plugins: {
+          legend: {
+            position: 'top', // Places the legend at the top of the chart
+            labels: {
+                color: chartTextColor // Ensures legend text color matches theme
+            }
+          },
+          title: { 
+              display: false, 
+              color: chartTextColor
+          },
+          tooltip: { // Ensure tooltips are also visible and themed
+              titleColor: chartTextColor,
+              bodyColor: chartTextColor,
+              borderColor: chartTextColor,
+              backgroundColor: isLightMode ? 'rgba(255,255,255,0.8)' : 'rgba(30,41,59,0.8)', // surface-dark with transparency
+              borderWidth: 1
+          },
+          datalabels: { // Configuration for the datalabels plugin (percentages on slices)
+            formatter: (value, context) => {
+              const total = context.chart.data.datasets[0].data.reduce((sum, data) => sum + data, 0);
+              if (total === 0) return '0%'; // Handle division by zero if no skills selected
+              const percentage = Math.round((value / total) * 100) + '%';
+              return percentage;
+            },
+            color: chartTextColor, // Ensure percentage text color matches theme
+            font: {
+              weight: 'bold',
+              size: 14 // Make percentage text larger for readability
+            },
+            display: (context) => { // Only display if value is greater than 0
+                return context.dataset.data[context.dataIndex] > 0;
+            }
+          }
+        }
       }
     });
   }
+  // --- END OF GRAPH CODE ---
+
 
   function suggestCareers() {
-  let suggestion = `Based on your interests and marks, you can consider:<br/><ul>`;
+    let suggestion = `Based on your interests and marks, you can consider:<br/><ul>`;
 
-  if (userData.favSubjects.includes('Math') || userData.skills.includes('Coding')) {
-    suggestion += '<li><b>B.Tech in Computer Science</b> → Software Engineer, Ethical Hacker</li>';
-    suggestion += '<li><b>B.Sc. in Data Science / AI</b> → Data Analyst, AI Engineer, ML Specialist</li>';
-    suggestion += '<li><b>B.Tech Civil/Mechanical/ECE</b> → Civil Engineer, Mechanical Engineer, Electronics Engineer</li>';
+    // Only add specific suggestions if relevant data is present
+    const hasFavSubjects = userData.favSubjects.length > 0;
+    const hasSkills = userData.skills.length > 0;
+
+    if (hasFavSubjects || hasSkills) { // Check if there's any input to work with
+      if (userData.favSubjects.includes('Math') || userData.skills.includes('Coding')) {
+        suggestion += '<li><b>B.Tech in Computer Science</b> → Software Engineer, Ethical Hacker</li>';
+        suggestion += '<li><b>B.Sc. in Data Science / AI</b> → Data Analyst, AI Engineer, ML Specialist</li>';
+      }
+
+      if (userData.favSubjects.includes('Science')) {
+        suggestion += '<li><b>MBBS or BDS</b> → Doctor, Dentist</li>';
+        suggestion += '<li><b>B.Pharm / B.Sc. Biotech</b> → Pharmacist, Biotech Researcher, Lab Technician</li>';
+      }
+
+      if (userData.skills.includes('Business')) {
+        suggestion += '<li><b>BBA or B.Com</b> → Entrepreneur, Manager</li>';
+      }
+
+      if (userData.skills.includes('Design')) {
+        suggestion += '<li><b>Design / Multimedia</b> → UI/UX Designer, Animator</li>';
+        suggestion += '<li><b>B.Arch</b> → Architect</li>';
+      }
+
+      if (userData.skills.includes('Helping') || userData.activities.includes('Helping others')) {
+        suggestion += '<li><b>B.Ed / B.Sc. / B.A.</b> → School Teacher, Tutor, Education Consultant</li>';
+      }
+
+      if (userData.activities.includes('Making videos') || userData.skills.includes('Reading')) {
+        suggestion += '<li><b>Mass Communication / Journalism</b> → Journalist, Content Creator, TV Host</li>';
+      }
+
+      if (userData.skills.includes('Reading') || userData.activities.includes('Solving puzzles')) {
+        suggestion += '<li><b>BA LLB (Law)</b> → Lawyer, Judge, Legal Advisor</li>';
+      }
+    }
+
+    // Fallback if no specific suggestions were added
+    if (suggestion === `Based on your interests and marks, you can consider:<br/><ul>`) {
+        suggestion += '<li>We recommend exploring a broad range of career paths based on your general academic performance and initial interests.</li>';
+        suggestion += '<li>Consider fields that encourage continuous learning and adaptability.</li>';
+    }
+
+
+    suggestion += '</ul>';
+
+    if (userData.grade === '12') {
+      suggestion += `<br/><b>Suggested UAE Colleges:</b> AUS, Khalifa University, Heriot-Watt Dubai`;
+    }
+
+    document.getElementById('career-suggestion').innerHTML = suggestion;
   }
 
-  if (userData.favSubjects.includes('Science')) {
-    suggestion += '<li><b>MBBS or BDS</b> → Doctor, Dentist</li>';
-    suggestion += '<li><b>B.Pharm / B.Sc. Biotech</b> → Pharmacist, Biotech Researcher, Lab Technician</li>';
+  async function downloadResult(type) {
+    const resultDiv = document.getElementById('screen-results');
+    window.scrollTo(0, 0);
+
+    const canvas = await html2canvas(resultDiv, {
+      backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-dark'), // Use dynamic background
+      useCORS: true
+    });
+
+    const name = userData.name || 'Student';
+    const grade = userData.grade || 'Grade';
+    
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+
+    const filename = `${name} - ${grade} Career Guidance - ${dateStr} ${timeStr}`;
+
+    if (type === 'jpg') {
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/jpeg');
+      link.download = filename + '.jpg';
+      link.click();
+    } else if (type === 'pdf') {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/jpeg');
+      const width = 210;
+      const height = canvas.height * (210 / canvas.width);
+      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+      pdf.save(filename + '.pdf');
+    }
   }
 
-  if (userData.skills.includes('Business')) {
-    suggestion += '<li><b>BBA or B.Com</b> → Entrepreneur, Manager</li>';
-  }
-
-  if (userData.skills.includes('Design')) {
-    suggestion += '<li><b>Design / Multimedia</b> → UI/UX Designer, Animator</li>';
-    suggestion += '<li><b>B.Arch</b> → Architect</li>';
-  }
-
-  if (userData.skills.includes('Helping') || userData.activities.includes('Helping others')) {
-    suggestion += '<li><b>B.Ed / B.Sc. / B.A.</b> → School Teacher, Tutor, Education Consultant</li>';
-  }
-
-  if (userData.activities.includes('Making videos') || userData.skills.includes('Reading')) {
-    suggestion += '<li><b>Mass Communication / Journalism</b> → Journalist, Content Creator, TV Host</li>';
-  }
-
-  if (userData.skills.includes('Reading') || userData.activities.includes('Solving puzzles')) {
-    suggestion += '<li><b>BA LLB (Law)</b> → Lawyer, Judge, Legal Advisor</li>';
-  }
-
-  suggestion += '</ul>';
-
-  if (userData.grade === '12') {
-    suggestion += `<br/><b>Suggested UAE Colleges:</b> AUS, Khalifa University, Heriot-Watt Dubai`;
-  }
-
-  document.getElementById('career-suggestion').innerHTML = suggestion;
-}
-
-async function downloadResult(type) {
-  const resultDiv = document.getElementById('screen-results');
-  window.scrollTo(0, 0);
-
-  const canvas = await html2canvas(resultDiv, {
-    backgroundColor: "#121212",
-    useCORS: true
+  // Initialize on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set default language for initial load
+    document.getElementById('languageSelect').value = 'en';
+    changeLanguage('en');
+    goToScreen('screen-name'); // Start with the name input screen
   });
 
-  const name = userData.name || 'Student';
-  const grade = userData.grade || 'Grade';
-  
-  const now = new Date();
-  const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
-  const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
-
-  const filename = `${name} - ${grade} Career Guidance - ${dateStr} ${timeStr}`;
-
-  if (type === 'jpg') {
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL('image/jpeg');
-    link.download = filename + '.jpg';
-    link.click();
-  } else if (type === 'pdf') {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgData = canvas.toDataURL('image/jpeg');
-    const width = 210;
-    const height = canvas.height * (210 / canvas.width);
-    pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-    pdf.save(filename + '.pdf');
-  }
-}
-
+  // Keyboard navigation (optional, but good practice)
   document.addEventListener("keydown", function(e) {
     const key = e.key;
-    if (key === "ArrowDown") {
-      window.scrollBy({ top: 100, behavior: "smooth" });
-    } else if (key === "ArrowUp") {
-      window.scrollBy({ top: -100, behavior: "smooth" });
-    } else if (key === "Enter" || key === "ArrowRight") {
-      const nextButtons = Array.from(document.querySelectorAll("button")).filter(btn =>
-        btn.offsetParent !== null && btn.innerText.toLowerCase().includes("next")
-      );
-      if (nextButtons.length) nextButtons[0].click();
+    if (key === "ArrowRight") {
+      // Find the "Next" button on the current screen and click it
+      const currentScreenElement = document.getElementById(currentScreenId);
+      const nextButton = currentScreenElement ? currentScreenElement.querySelector('.button-group .btn:last-child') : null;
+      if (nextButton && (nextButton.textContent.includes(translations[currentLanguage]["next"]) || nextButton.textContent.includes(translations[currentLanguage]["showResults"]))) {
+        nextButton.click();
+      }
     } else if (key === "ArrowLeft") {
-      const backButtons = Array.from(document.querySelectorAll("button")).filter(btn =>
-        btn.offsetParent !== null && btn.innerText.toLowerCase().includes("back")
-      );
-      if (backButtons.length) backButtons[0].click();
+      // Find the "Back" button on the current screen and click it
+      const currentScreenElement = document.getElementById(currentScreenId);
+      const backButton = currentScreenElement ? currentScreenElement.querySelector('.button-group .btn:first-child') : null;
+      if (backButton && backButton.textContent.includes(translations[currentLanguage]["back"])) {
+        backButton.click();
+      }
     }
   });
 </script>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #121212;
-    color: #eee;
-  }
-
-  .banner {
-    background: #1f1f1f;
-    text-align: center;
-    padding: 1.5rem;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.8rem;
-    color: #00ffe1;
-  }
-
-  .container {
-    width: 90%;
-    max-width: 700px;
-    margin: 2rem auto;
-    padding: 1.5rem;
-    background: #1e1e1e;
-    border-radius: 1rem;
-    box-shadow: 0 0 10px #000;
-    box-sizing: border-box;
-  }
-
-  .question {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    padding: 0.7rem;
-    margin: 0.5rem 0 1.5rem;
-    border-radius: 8px;
-    border: none;
-    background: #2c2c2c;
-    color: #fff;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-
-  button {
-    background: #00ffe1;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-    box-sizing: border-box;
-  }
-
-  .checkbox-group label {
-    display: block;
-    margin: 0.3rem 0;
-    cursor: pointer;
-  }
-
-  canvas {
-    margin: 2rem auto;
-    width: 100% !important;
-    height: auto !important;
-    max-height: 400px;
-    display: block;
-  }
-
-  .screen {
-    display: none;
-  }
-
-  .screen.active {
-    display: block;
-  }
-
-  .footer {
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.9rem;
-    color: #888;
-    margin-top: 4rem;
-  }
-  @media (max-width: 600px) {
-    .banner {
-      font-size: 1.3rem;
-      padding: 1rem;
-    }
-
-    .container {
-      padding: 1rem;
-    }
-
-    .question {
-      font-size: 1rem;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    button {
-      font-size: 0.95rem;
-    }
-  }
-</style>
 </body>
 </html>
